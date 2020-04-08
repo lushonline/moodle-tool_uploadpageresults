@@ -202,7 +202,9 @@ class tool_uploadpageresults_helper {
 
                     if ($currentstate->viewed != COMPLETION_VIEWED) {
                         self::page_viewed($course, $cm, null, $user->id);
-                        $message .= 'Page - Completion Viewed set to true.';
+                        $response->message = 'Page - Completion Viewed set to true.';
+                        $response->skipped = 0;
+                        $response->added = 1;
                     } else {
                         $response->message = 'Page completion viewed already exists.';
                         $response->skipped = 1;
@@ -215,12 +217,14 @@ class tool_uploadpageresults_helper {
                 }
             } else {
                 $response->skipped = 1;
+                $response->added = 0;
                 $response->message = 'User with username '.$record->user_username.' does not exist';
             }
         } else {
             // Course does not exist so skip.
             $response->message = 'Course with idnumber '.$record->course_idnumber.' does not exist';
             $response->skipped = 1;
+            $response->added = 0;
         }
 
         return $response;
