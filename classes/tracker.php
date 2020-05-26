@@ -172,7 +172,7 @@ class tool_uploadpageresults_tracker {
             }
             echo html_writer::start_tag('tr', array('class' => 'r' . $this->rownb % 2));
             echo html_writer::tag('td', $message[0], array('class' => 'c' . $ci++));
-            echo html_writer::tag('td', $message[1], array('class' => 'c' . $ci++));
+            echo html_writer::tag('td', $outcome, array('class' => 'c' . $ci++));
             echo html_writer::tag('td', $message[2], array('class' => 'c' . $ci++));
             echo html_writer::tag('td', $message[3], array('class' => 'c' . $ci++));
             echo html_writer::tag('td', $message[4], array('class' => 'c' . $ci++));
