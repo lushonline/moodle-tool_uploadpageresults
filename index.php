@@ -34,6 +34,7 @@ $pagetitle = get_string('pluginname', 'tool_uploadpageresults');
 $context = context_system::instance();
 
 $url = new moodle_url("/admin/tool/uploadpageresults/index.php");
+$returnurl = new moodle_url("/admin/tool/uploadpageresults/index.php");
 $PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
