@@ -100,7 +100,6 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
             'lastname' => 'Student1'
         )));
 
-        $context = context_module::instance($this->page->cmid);
         $this->cm = get_coursemodule_from_instance('page', $this->page->id);
 
         $criterion = new completion_criteria_activity();
@@ -151,7 +150,6 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
 
         $importer = new tool_uploadpageresults_importer(null, null, null, $importid, null);
         $importer->execute();
-        $error = $importer->get_error();
 
         // Check completion status.
         // Get the current state for the activity and user.
@@ -208,7 +206,6 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
         $content = file_get_contents($source);
 
         $importer = new tool_uploadpageresults_importer($content, null, null);
-        $importid = $importer->get_importid();
         $error = $importer->get_error();
 
         $this->assertTrue($error != "", "error".$error);
@@ -224,7 +221,6 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
         $content = file_get_contents($source);
 
         $importer = new tool_uploadpageresults_importer($content, null, null);
-        $importid = $importer->get_importid();
         $error = $importer->get_error();
 
         $this->assertTrue($error != "", "error".$error);
