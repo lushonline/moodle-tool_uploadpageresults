@@ -44,7 +44,7 @@ Feature: An admin can update a single page activity course using a CSV file
     And I should see "Student1 Student1"
     And "Completed" "icon" should exist in the "student1" "table_row"
 
-@javascript
+  @javascript
   Scenario: Update of course viewed and enrol user skipped as user does not exist
     Given I log in as "admin"
     And I navigate to "Courses > Upload page activities completions" in site administration
@@ -54,7 +54,7 @@ Feature: An admin can update a single page activity course using a CSV file
     And I should see "User with username student999 does not exist"
     And I should see "Completions skipped: 1"
 
-@javascript
+  @javascript
   Scenario: Update of course viewed and enrol user skipped as user does not exist
     Given I log in as "admin"
     And I navigate to "Courses > Upload page activities completions" in site administration
