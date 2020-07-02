@@ -106,4 +106,4 @@ if ($error) {
 }
 
 $importer = new tool_uploadpageresults_importer(null, null, null, $importid, null);
-$importer->execute(new tool_uploadpageresults_tracker(tool_uploadpageresults_tracker::OUTPUT_PLAIN));
+$importer->execute(new tool_uploadpageresults_tracker(tool_uploadpageresults_tracker::OUTPUT_PLAIN, true));

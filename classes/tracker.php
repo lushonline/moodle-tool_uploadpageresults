@@ -72,11 +72,16 @@ class tool_uploadpageresults_tracker {
      * Constructor.
      *
      * @param int $outputmode desired output mode.
+     * @param bool $passthrough do we pass output as well as buffering it.
+     *
      */
-    public function __construct($outputmode = self::NO_OUTPUT) {
+    public function __construct($outputmode = self::NO_OUTPUT, $passthrough = false) {
         $this->outputmode = $outputmode;
         if ($this->outputmode == self::OUTPUT_PLAIN) {
-            $this->buffer = new progress_trace_buffer(new text_progress_trace());
+            $this->buffer = new progress_trace_buffer(new text_progress_trace(), $passthrough);
+        }
+        if ($this->outputmode == self::OUTPUT_HTML) {
+            $this->buffer = new progress_trace_buffer(new text_progress_trace(), $passthrough);
         }
     }
 
@@ -91,7 +96,7 @@ class tool_uploadpageresults_tracker {
         }
 
         if ($this->outputmode == self::OUTPUT_HTML) {
-            echo html_writer::end_tag('table');
+            $this->buffer->output(html_writer::end_tag('table'));
         }
     }
 
@@ -121,11 +126,12 @@ class tool_uploadpageresults_tracker {
                 $this->buffer->output($msg);
             }
         } else if ($this->outputmode == self::OUTPUT_HTML) {
-            $buffer = new progress_trace_buffer(new html_list_progress_trace());
+
+            $this->buffer->output(html_writer::start_tag('ul'));
             foreach ($message as $msg) {
-                $buffer->output($msg);
+                $this->buffer->output(html_writer::tag('li', htmlspecialchars($msg)));
             }
-            $buffer->finished();
+            $this->buffer->output(html_writer::end_tag('ul'));
         }
     }
 
@@ -170,14 +176,14 @@ class tool_uploadpageresults_tracker {
             } else {
                 $outcome = $OUTPUT->pix_icon('i/invalid', '');
             }
-            echo html_writer::start_tag('tr', array('class' => 'r' . $this->rownb % 2));
-            echo html_writer::tag('td', $message[0], array('class' => 'c' . $ci++));
-            echo html_writer::tag('td', $outcome, array('class' => 'c' . $ci++));
-            echo html_writer::tag('td', $message[2], array('class' => 'c' . $ci++));
-            echo html_writer::tag('td', $message[3], array('class' => 'c' . $ci++));
-            echo html_writer::tag('td', $message[4], array('class' => 'c' . $ci++));
-            echo html_writer::tag('td', $status, array('class' => 'c' . $ci++));
-            echo html_writer::end_tag('tr');
+            $this->buffer->output(html_writer::start_tag('tr', array('class' => 'r' . $this->rownb % 2)));
+            $this->buffer->output(html_writer::tag('td', $message[0], array('class' => 'c' . $ci++)));
+            $this->buffer->output(html_writer::tag('td', $outcome, array('class' => 'c' . $ci++)));
+            $this->buffer->output(html_writer::tag('td', $message[2], array('class' => 'c' . $ci++)));
+            $this->buffer->output(html_writer::tag('td', $message[3], array('class' => 'c' . $ci++)));
+            $this->buffer->output(html_writer::tag('td', $message[4], array('class' => 'c' . $ci++)));
+            $this->buffer->output(html_writer::tag('td', $status, array('class' => 'c' . $ci++)));
+            $this->buffer->output(html_writer::end_tag('tr'));
         }
     }
 
@@ -198,23 +204,34 @@ class tool_uploadpageresults_tracker {
             $this->buffer->output(implode("\t", $columns));
         } else if ($this->outputmode == self::OUTPUT_HTML) {
             $ci = 0;
-            echo html_writer::start_tag('table', array('class' => 'generaltable boxaligncenter flexible-wrap',
-                'summary' => get_string('uploadpageresultsresult', 'tool_uploadpageresults')));
-            echo html_writer::start_tag('tr', array('class' => 'heading r' . $this->rownb));
-            echo html_writer::tag('th', get_string('csvline', 'tool_uploadpageresults'),
-                array('class' => 'c' . $ci++, 'scope' => 'col'));
-            echo html_writer::tag('th', get_string('result', 'tool_uploadpageresults'),
-                                        array('class' => 'c' . $ci++, 'scope' => 'col'));
-            echo html_writer::tag('th', get_string('username'),
-                                        array('class' => 'c' . $ci++, 'scope' => 'col'));
-            echo html_writer::tag('th', get_string('idnumbercourse'),
-                                        array('class' => 'c' . $ci++, 'scope' => 'col'));
-            echo html_writer::tag('th', get_string('fullnamecourse'),
-                                        array('class' => 'c' . $ci++, 'scope' => 'col'));
-            echo html_writer::tag('th', get_string('status'),
-                                        array('class' => 'c' . $ci++, 'scope' => 'col'));
-            echo html_writer::end_tag('tr');
+            $this->buffer->output(html_writer::start_tag('table', array('class' => 'generaltable boxaligncenter flexible-wrap',
+                'summary' => get_string('uploadpageresultsresult', 'tool_uploadpageresults'))));
+            $this->buffer->output(html_writer::start_tag('tr', array('class' => 'heading r' . $this->rownb)));
+            $this->buffer->output(html_writer::tag('th', get_string('csvline', 'tool_uploadpageresults'),
+                array('class' => 'c' . $ci++, 'scope' => 'col')));
+            $this->buffer->output(html_writer::tag('th', get_string('result', 'tool_uploadpageresults'),
+                                        array('class' => 'c' . $ci++, 'scope' => 'col')));
+            $this->buffer->output(html_writer::tag('th', get_string('username'),
+                                        array('class' => 'c' . $ci++, 'scope' => 'col')));
+            $this->buffer->output(html_writer::tag('th', get_string('idnumbercourse'),
+                                        array('class' => 'c' . $ci++, 'scope' => 'col')));
+            $this->buffer->output(html_writer::tag('th', get_string('fullnamecourse'),
+                                        array('class' => 'c' . $ci++, 'scope' => 'col')));
+            $this->buffer->output(html_writer::tag('th', get_string('status'),
+                                        array('class' => 'c' . $ci++, 'scope' => 'col')));
+            $this->buffer->output(html_writer::end_tag('tr'));
         }
+    }
+
+    /**
+     * Return text buffer.
+     * @return string buffered plain text
+     */
+    public function get_buffer() {
+        if ($this->outputmode == self::NO_OUTPUT) {
+            return "";
+        }
+        return $this->buffer->get_buffer();
     }
 
 }

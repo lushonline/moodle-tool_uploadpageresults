@@ -153,6 +153,24 @@ class tool_uploadpageresults_importer {
     }
 
     /**
+     *
+     * Validate as a minimum the CSV contains the same number of columns as we require
+     *
+     * @return bool
+     */
+    private function validateheaders() {
+
+        $foundcount = count($this->list_found_headers());
+        $requiredcount = count($this->list_required_headers());
+
+        if ($foundcount < $requiredcount) {
+            $this->fail(get_string('csvfewcolumns', 'error'));
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Constructor
      *
      * @param string $text
@@ -193,6 +211,11 @@ class tool_uploadpageresults_importer {
         }
 
         $this->foundheaders = $this->importer->get_columns();
+        if (!$this->validateheaders()) {
+            $this->fail(get_string('invalidimportfile', 'tool_uploadpageresults'));
+            $this->importer->cleanup();
+            return;
+        }
 
         $record = null;
         $records = array();
@@ -278,5 +301,6 @@ class tool_uploadpageresults_importer {
 
         $tracker->finish();
         $tracker->results($total, $added, $skipped, $errors);
+        return $tracker->get_buffer();
     }
 }

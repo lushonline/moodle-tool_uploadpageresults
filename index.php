@@ -35,6 +35,7 @@ $context = context_system::instance();
 
 $url = new moodle_url("/admin/tool/uploadpageresults/index.php");
 $returnurl = new moodle_url("/admin/tool/uploadpageresults/index.php");
+
 $PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
@@ -44,7 +45,6 @@ $PAGE->set_heading($pagetitle);
 $importid      = optional_param('importid', '', PARAM_INT);
 $confirm       = optional_param('confirm', '0', PARAM_BOOL);
 $needsconfirm  = optional_param('needsconfirm', '0', PARAM_BOOL);
-
 
 $text = null;
 $encoding = null;
@@ -77,17 +77,18 @@ if ($form2data = $mform2->is_cancelled()) {
     redirect($returnurl);
 } else if ($form2data = $mform2->get_data()) {
     $importid = $form2data->importid;
-    $category = $form2data->category;
+
     $importer = new tool_uploadpageresults_importer(null, null, null, $importid, $form2data);
     $error = $importer->get_error();
     if ($error) {
         redirect($returnurl);
     } else {
+        $processingresponse = $importer->execute(new tool_uploadpageresults_tracker(
+            tool_uploadpageresults_tracker::OUTPUT_HTML, false)
+        );
         echo $OUTPUT->header();
         echo $OUTPUT->heading(get_string('uploadpageresultsresult', 'tool_uploadpageresults'));
-        $records = $importer->execute(new tool_uploadpageresults_tracker(
-                                            tool_uploadpageresults_tracker::OUTPUT_HTML)
-                                     );
+        echo $processingresponse;
         echo $OUTPUT->continue_button($url);
     }
 } else {
