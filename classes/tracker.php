@@ -125,13 +125,33 @@ class tool_uploadpageresults_tracker {
             foreach ($message as $msg) {
                 $this->buffer->output($msg);
             }
-        } else if ($this->outputmode == self::OUTPUT_HTML) {
+        }
 
+        if ($this->outputmode == self::OUTPUT_HTML) {
             $this->buffer->output(html_writer::start_tag('ul'));
             foreach ($message as $msg) {
                 $this->buffer->output(html_writer::tag('li', htmlspecialchars($msg)));
             }
             $this->buffer->output(html_writer::end_tag('ul'));
+        }
+    }
+
+    /**
+     * Get the outcome indicator
+     *
+     * @param bool $outcome success or not?
+     * @return object
+     */
+    private function getOutcomeIndicator($outcome) {
+        global $OUTPUT;
+
+        switch ($this->outputmode) {
+            case self::OUTPUT_PLAIN:
+                return $outcome ? 'OK' : 'NOK';
+            case self::OUTPUT_HTML:
+                return $outcome ?  $OUTPUT->pix_icon('i/valid', '') :  $OUTPUT->pix_icon('i/invalid', '');
+            default:
+               return;
         }
     }
 
@@ -146,13 +166,14 @@ class tool_uploadpageresults_tracker {
      */
     public function output($line, $outcome, $status, $data) {
         global $OUTPUT;
+
         if ($this->outputmode == self::NO_OUTPUT) {
             return;
         }
 
         $message = array(
             $line,
-            $outcome ? 'OK' : 'NOK',
+            self::getOutcomeIndicator($outcome),
             isset($data->user) ? $data->user->username : '',
             isset($data->course) ? $data->course->id : '',
             isset($data->course) ? $data->course->fullname : ''
@@ -160,25 +181,20 @@ class tool_uploadpageresults_tracker {
 
         if ($this->outputmode == self::OUTPUT_PLAIN) {
             $this->buffer->output(implode("\t", $message));
-            if (!empty($status)) {
-                foreach ($status as $st) {
-                    $this->buffer->output($st, 1);
-                }
+            if (is_array($status)) {
+                $this->buffer->output(implode("\t  ", $status));
             }
-        } else if ($this->outputmode == self::OUTPUT_HTML) {
+        }
+
+        if ($this->outputmode == self::OUTPUT_HTML) {
             $ci = 0;
             $this->rownb++;
             if (is_array($status)) {
                 $status = implode(html_writer::empty_tag('br'), $status);
             }
-            if ($outcome) {
-                $outcome = $OUTPUT->pix_icon('i/valid', '');
-            } else {
-                $outcome = $OUTPUT->pix_icon('i/invalid', '');
-            }
             $this->buffer->output(html_writer::start_tag('tr', array('class' => 'r' . $this->rownb % 2)));
             $this->buffer->output(html_writer::tag('td', $message[0], array('class' => 'c' . $ci++)));
-            $this->buffer->output(html_writer::tag('td', $outcome, array('class' => 'c' . $ci++)));
+            $this->buffer->output(html_writer::tag('td', $message[1], array('class' => 'c' . $ci++)));
             $this->buffer->output(html_writer::tag('td', $message[2], array('class' => 'c' . $ci++)));
             $this->buffer->output(html_writer::tag('td', $message[3], array('class' => 'c' . $ci++)));
             $this->buffer->output(html_writer::tag('td', $message[4], array('class' => 'c' . $ci++)));
