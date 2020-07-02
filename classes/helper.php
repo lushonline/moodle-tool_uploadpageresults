@@ -188,7 +188,6 @@ class tool_uploadpageresults_helper {
                 $response->user = $user;
 
                 if ($cm = self::get_coursemodule_from_course_idnumber($course)) {
-                    $message = '';
                     // Execute real Moodle enrolment for user.
                     enrol_try_internal_enrol($course->id, $user->id, $studentrole->id);
 
