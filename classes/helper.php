@@ -99,19 +99,16 @@ class tool_uploadpageresults_helper {
     /**
      * Retrieve course module $cm by course idnumber.
      *
-     * use modinfolib.php
-     *
      * @param string $course course object
      * @return stdClass $cm Activity or null if none found
      */
     public static function get_coursemodule_from_course_idnumber($course) {
+        global $DB;
+
         $cm = null;
-        foreach (get_fast_modinfo($course->id, -1)->get_instances_of('page') as $pages => $cminfo) {
-            if ($cminfo->idnumber == $course->idnumber) {
-                $cm = $cminfo->get_course_module_record();
-                break;
-            }
-        }
+        $params = array('idnumber' => $course->idnumber, 'course' => $course->id);
+        $cm = $DB->get_record('course_modules', $params);
+
         return $cm;
     }
 
