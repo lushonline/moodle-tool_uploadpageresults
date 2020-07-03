@@ -165,8 +165,6 @@ class tool_uploadpageresults_tracker {
      * @return void
      */
     public function output($line, $outcome, $status, $data) {
-        global $OUTPUT;
-
         if ($this->outputmode == self::NO_OUTPUT) {
             return;
         }
