@@ -72,10 +72,10 @@ class tool_uploadpageresults_tracker {
      * Constructor.
      *
      * @param int $outputmode desired output mode.
-     * @param bool $passthrough do we pass output as well as buffering it.
+     * @param object $passthrough do we print output as well as buffering it.
      *
      */
-    public function __construct($outputmode = self::NO_OUTPUT, $passthrough = false) {
+    public function __construct($outputmode = self::NO_OUTPUT, $passthrough = null) {
         $this->outputmode = $outputmode;
         if ($this->outputmode == self::OUTPUT_PLAIN) {
             $this->buffer = new progress_trace_buffer(new text_progress_trace(), $passthrough);
@@ -142,14 +142,14 @@ class tool_uploadpageresults_tracker {
      * @param bool $outcome success or not?
      * @return object
      */
-    private function getOutcomeIndicator($outcome) {
+    private function getoutcomeindicator($outcome) {
         global $OUTPUT;
 
         switch ($this->outputmode) {
             case self::OUTPUT_PLAIN:
                 return $outcome ? 'OK' : 'NOK';
             case self::OUTPUT_HTML:
-                return $outcome ?  $OUTPUT->pix_icon('i/valid', '') :  $OUTPUT->pix_icon('i/invalid', '');
+                return $outcome ? $OUTPUT->pix_icon('i/valid', '') : $OUTPUT->pix_icon('i/invalid', '');
             default:
                return;
         }
@@ -173,7 +173,7 @@ class tool_uploadpageresults_tracker {
 
         $message = array(
             $line,
-            self::getOutcomeIndicator($outcome),
+            self::getoutcomeindicator($outcome),
             isset($data->user) ? $data->user->username : '',
             isset($data->course) ? $data->course->id : '',
             isset($data->course) ? $data->course->fullname : ''
