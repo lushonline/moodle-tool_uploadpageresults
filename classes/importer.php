@@ -35,7 +35,7 @@ class tool_uploadpageresults_importer {
     /**
      * @var string $error   Last error message.
      */
-    public $error = '';
+    public $error = array();
 
     /**
      * @var array $records   The records to process.
@@ -78,14 +78,12 @@ class tool_uploadpageresults_importer {
     public $processstarted = false;
 
     /**
-     * Return a Failure
+     * Add error message to error message stack
      *
      * @param string $msg
-     * @return bool Always returns false
      */
     public function fail($msg) {
-        $this->error = $msg;
-        return false;
+        array_push($this->error, $msg);
     }
 
     /**
@@ -243,7 +241,17 @@ class tool_uploadpageresults_importer {
      *
      * @return string the last error
      */
-    public function get_error() {
+    public function haserrors() {
+        return count($this->error) > 0;
+    }
+
+
+    /**
+     * Get the error information array
+     *
+     * @return array the error messages
+     */
+    public function geterrors() {
         return $this->error;
     }
 
