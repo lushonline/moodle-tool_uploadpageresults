@@ -53,3 +53,6 @@ $string['invalidcsvfile'] = 'File format is invalid.';
 $string['invalidencoding'] = 'Invalid encoding specified';
 
 // Helper.
+
+// Importer.
+$string['invalidfileexception'] = 'File format is invalid. {$a}';
