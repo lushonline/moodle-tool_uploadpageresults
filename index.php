@@ -69,7 +69,14 @@ if (empty($importid)) {
 }
 
 $importer = new tool_uploadpageresults_importer($text, $encoding, $delimiter);
-unset($text);
+if ($importer->haserrors() && empty($importid)) {
+    throw new moodle_exception('invalidfileexception',
+                                'tool_uploadpageresults',
+                                $url,
+                                implode(PHP_EOL, $importer->geterrors())
+    );
+}
+
 $mform2 = new tool_uploadpageresults_import_confirm_form(null, $importer);
 
 // Was the second form submitted.
@@ -79,18 +86,13 @@ if ($form2data = $mform2->is_cancelled()) {
     $importid = $form2data->importid;
 
     $importer = new tool_uploadpageresults_importer(null, null, null, $importid, $form2data);
-    $error = $importer->get_error();
-    if ($error) {
-        redirect($returnurl);
-    } else {
-        $processingresponse = $importer->execute(new tool_uploadpageresults_tracker(
-            tool_uploadpageresults_tracker::OUTPUT_HTML, false)
-        );
-        echo $OUTPUT->header();
-        echo $OUTPUT->heading(get_string('uploadpageresultsresult', 'tool_uploadpageresults'));
-        echo $processingresponse;
-        echo $OUTPUT->continue_button($url);
-    }
+    $processingresponse = $importer->execute(new tool_uploadpageresults_tracker(
+        tool_uploadpageresults_tracker::OUTPUT_HTML, false)
+    );
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(get_string('uploadpageresultsresult', 'tool_uploadpageresults'));
+    echo $processingresponse;
+    echo $OUTPUT->continue_button($url);
 } else {
     // First time.
     echo $OUTPUT->header();
