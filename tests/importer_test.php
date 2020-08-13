@@ -206,9 +206,7 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
         $content = file_get_contents($source);
 
         $importer = new tool_uploadpageresults_importer($content, null, null);
-        $error = $importer->get_error();
-
-        $this->assertTrue($error != "", "error".$error);
+        $this->assertTrue($importer->haserrors(), 'Error Messages: '.implode(PHP_EOL, $importer->geterrors()));
     }
 
     /**
@@ -221,9 +219,7 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
         $content = file_get_contents($source);
 
         $importer = new tool_uploadpageresults_importer($content, null, null);
-        $error = $importer->get_error();
-
-        $this->assertTrue($error != "", "error".$error);
+        $this->assertTrue($importer->haserrors(), 'Error Messages: '.implode(PHP_EOL, $importer->geterrors()));
     }
 
 }
