@@ -40,9 +40,7 @@ Feature: An admin can update a single page activity course using a CSV file
     And I follow "Participants"
     And I should see "Student1 Student1"
     And I am on "C1b49aa30-e719-11e6-9835-f723b46a2688 Full Name" course homepage
-    And I navigate to "Reports > Activity completion" in current page administration
-    And I should see "Student1 Student1"
-    And "Completed" "icon" should exist in the "student1" "table_row"
+    And "Student1 Student1" user has completed "Page Name" activity
 
   @javascript
   Scenario: Update of course viewed and enrol user skipped as user does not exist
