@@ -11,16 +11,52 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        moodle-version: ['MOODLE_35_STABLE', 'MOODLE_36_STABLE', 'MOODLE_37_STABLE', 'MOODLE_38_STABLE', 'MOODLE_39_STABLE', 'MOODLE_310_STABLE', 'MOODLE_311_STABLE']
+        moodle-version: ['MOODLE_32_STABLE','MOODLE_33_STABLE','MOODLE_34_STABLE', 'MOODLE_35_STABLE', 'MOODLE_36_STABLE', 'MOODLE_37_STABLE', 'MOODLE_38_STABLE', 'MOODLE_39_STABLE', 'MOODLE_310_STABLE', 'MOODLE_311_STABLE']
         database: ['pgsql', 'mariadb']
         operating-system: [ubuntu-latest]
         php-versions: ['7.2']
         node-versions: ['14.15.0']
 
         exclude:
+          - moodle-version: 'MOODLE_32_STABLE'
+            node-versions: '14.15.0'
+          - moodle-version: 'MOODLE_33_STABLE'
+            node-versions: '14.15.0'
+          - moodle-version: 'MOODLE_34_STABLE'
+            node-versions: '14.15.0'
           - moodle-version: 'MOODLE_36_STABLE'
             node-versions: '14.15.0'
         include:
+          - moodle-version: 'MOODLE_32_STABLE'
+            database: 'pgsql'
+            operating-system: 'ubuntu-latest'
+            php-versions: '7.0'
+            node-versions: '8.9'
+          - moodle-version: 'MOODLE_32_STABLE'
+            database: 'mariadb'
+            operating-system: 'ubuntu-latest'
+            php-versions: '7.0'
+            node-versions: '8.9'
+          - moodle-version: 'MOODLE_33_STABLE'
+            database: 'pgsql'
+            operating-system: 'ubuntu-latest'
+            php-versions: '7.0'
+            node-versions: '8.9'
+          - moodle-version: 'MOODLE_33_STABLE'
+            database: 'mariadb'
+            operating-system: 'ubuntu-latest'
+            php-versions: '7.0'
+            node-versions: '8.9'
+          - moodle-version: 'MOODLE_34_STABLE'
+            database: 'pgsql'
+            operating-system: 'ubuntu-latest'
+            php-versions: '7.2'
+            node-versions: '8.9'
+          - moodle-version: 'MOODLE_34_STABLE'
+            database: 'mariadb'
+            operating-system: 'ubuntu-latest'
+            php-versions: '7.2'
+            node-versions: '8.9'
           - moodle-version: 'MOODLE_36_STABLE'
             database: 'pgsql'
             operating-system: 'ubuntu-latest'
@@ -86,9 +122,15 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, pgsql, mysqli
+          extensions: mbstring, pgsql, mysqli, zip, gd
           tools: phpunit
           coverage: none
+
+      - name: Install Composer 1.x for MOODLE 3.2, 3.3 and 3.4
+        if: ${{ matrix.moodle-version == 'MOODLE_32_STABLE' || matrix.moodle-version == 'MOODLE_33_STABLE' || matrix.moodle-version == 'MOODLE_34_STABLE' }}
+        run: |
+          # Update composer on 1.x branch
+          composer self-update --1
 
       - name: Deploy moodle-plugin-ci
         run: |
