@@ -67,7 +67,7 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
      * Prepares things before this test case is initialised
      * @return void
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void {
         global $CFG;
         require_once($CFG->libdir . '/csvlib.class.php');
         require_once($CFG->libdir . '/completionlib.php');
@@ -78,7 +78,7 @@ class tool_uploadpageresults_importer_testcase extends advanced_testcase {
      * Setup testcase.
      * @return void
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest();
 
         // Setup test course.
