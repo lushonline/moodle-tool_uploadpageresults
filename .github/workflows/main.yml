@@ -12,9 +12,6 @@ jobs:
       fail-fast: true
       matrix:
         moodle-versions: [
-          'MOODLE_32_STABLE',
-          'MOODLE_33_STABLE',
-          'MOODLE_34_STABLE',
           'MOODLE_35_STABLE',
           'MOODLE_36_STABLE',
           'MOODLE_37_STABLE',
@@ -32,45 +29,9 @@ jobs:
         node-versions: ['14.15.0']
 
         exclude:
-          - moodle-versions: 'MOODLE_32_STABLE'
-            node-versions: '14.15.0'
-          - moodle-versions: 'MOODLE_33_STABLE'
-            node-versions: '14.15.0'
-          - moodle-versions: 'MOODLE_34_STABLE'
-            node-versions: '14.15.0'
           - moodle-versions: 'MOODLE_36_STABLE'
             node-versions: '14.15.0'
         include:
-          - moodle-versions: 'MOODLE_32_STABLE'
-            database: 'pgsql'
-            operating-system: 'ubuntu-latest'
-            php-versions: '7.0'
-            node-versions: '8.9'
-          - moodle-versions: 'MOODLE_32_STABLE'
-            database: 'mariadb'
-            operating-system: 'ubuntu-latest'
-            php-versions: '7.0'
-            node-versions: '8.9'
-          - moodle-versions: 'MOODLE_33_STABLE'
-            database: 'pgsql'
-            operating-system: 'ubuntu-latest'
-            php-versions: '7.0'
-            node-versions: '8.9'
-          - moodle-versions: 'MOODLE_33_STABLE'
-            database: 'mariadb'
-            operating-system: 'ubuntu-latest'
-            php-versions: '7.0'
-            node-versions: '8.9'
-          - moodle-versions: 'MOODLE_34_STABLE'
-            database: 'pgsql'
-            operating-system: 'ubuntu-latest'
-            php-versions: '7.2'
-            node-versions: '8.9'
-          - moodle-versions: 'MOODLE_34_STABLE'
-            database: 'mariadb'
-            operating-system: 'ubuntu-latest'
-            php-versions: '7.2'
-            node-versions: '8.9'
           - moodle-versions: 'MOODLE_36_STABLE'
             database: 'pgsql'
             operating-system: 'ubuntu-latest'
