@@ -1,6 +1,6 @@
 # tool_uploadpageresults
 
-[![Build Status](https://travis-ci.org/lushonline/moodle-tool_uploadpageresults.svg?branch=master)](https://travis-ci.org/lushonline/moodle-tool_uploadpageresults)
+![Moodle Plugin CI](https://github.com/lushonline/moodle-tool_uploadpageresults/workflows/Moodle%20Plugin%20CI/badge.svg?branch=moodle33)
 
 A tool to allow import of completion results for Page activities using a text delimited file.
 
